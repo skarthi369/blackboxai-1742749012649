@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Cost Predictor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <header class="relative bg-blue-600 h-64 md:h-96">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); opacity: 0.2;"></div>
+        <div class="relative container mx-auto px-6 h-full flex items-center">
+            <div class="text-white">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Insurance Cost Predictor</h1>
+                <p class="text-xl md:text-2xl opacity-90">Get an estimate of your insurance charges</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 mt-[-4rem] relative">
+            <form id="predictionForm" class="space-y-6">
+                <!-- Age Input -->
+                <div>
+                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-user-clock mr-2"></i>Age
+                    </label>
+                    <input type="number" id="age" name="age" required min="0" max="120"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        placeholder="Enter your age">
+                </div>
+
+                <!-- BMI Input -->
+                <div>
+                    <label for="bmi" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-weight mr-2"></i>BMI
+                    </label>
+                    <input type="number" id="bmi" name="bmi" required step="0.1" min="10" max="50"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        placeholder="Enter your BMI">
+                </div>
+
+                <!-- Children Input -->
+                <div>
+                    <label for="children" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-child mr-2"></i>Number of Children
+                    </label>
+                    <input type="number" id="children" name="children" required min="0" max="10"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        placeholder="Number of children">
+                </div>
+
+                <!-- Smoker Input -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        <i class="fas fa-smoking mr-2"></i>Are you a smoker?
+                    </label>
+                    <div class="flex space-x-4">
+                        <div class="flex items-center">
+                            <input type="radio" id="smoker-yes" name="smoker" value="1" required
+                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                            <label for="smoker-yes" class="ml-2 block text-sm text-gray-700">Yes</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="smoker-no" name="smoker" value="0" required
+                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                            <label for="smoker-no" class="ml-2 block text-sm text-gray-700">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                        <i class="fas fa-calculator mr-2"></i>
+                        Calculate Insurance Cost
+                    </button>
+                </div>
+            </form>
+
+            <!-- Result Section -->
+            <div id="result" class="mt-6 hidden">
+                <div class="bg-gray-50 rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Predicted Insurance Cost</h3>
+                    <p id="prediction" class="text-3xl font-bold text-blue-600"></p>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="hidden mt-6 text-center">
+                <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-blue-600">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Calculating...
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error" class="hidden mt-6">
+                <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p id="error-message" class="text-sm text-red-700"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 mt-12">
+        <div class="container mx-auto px-6 py-8">
+            <p class="text-center text-gray-500 text-sm">
+                © 2024 Insurance Cost Predictor. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
